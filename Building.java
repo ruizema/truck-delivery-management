@@ -48,11 +48,24 @@ public class Building extends BoxContainer {
         // Merging back the two lists
         Queue<Building> sorted = new LinkedList<>();
         while (!left.isEmpty() && !right.isEmpty()) {
-            double leftDistance = left.peek().getDistanceFromTruck();
-            double rightDistance = right.peek().getDistanceFromTruck();
-            if (leftDistance <= rightDistance) {
+            Building leftItem = left.peek();
+            Building rightItem = right.peek();
+            double leftDistance = leftItem.getDistanceFromTruck();
+            double rightDistance = rightItem.getDistanceFromTruck();
+            if (leftDistance < rightDistance) {
                 sorted.add(left.remove());
-            } else {
+            } else if (leftDistance == rightDistance) {
+                double leftLat = leftItem.getCoordinates().getLatitude();
+                double rightLat = rightItem.getCoordinates().getLatitude();
+                double leftLon = leftItem.getCoordinates().getLongitude();
+                double rightLon = leftItem.getCoordinates().getLongitude();
+                if (leftLat < rightLat || (leftLat == rightLat && leftLon < rightLon)) {
+                    sorted.add(left.remove());
+                } else {
+                    sorted.add(right.remove());
+                }
+            }
+            else {
                 sorted.add(right.remove());
             }
         }

@@ -20,13 +20,21 @@ public class Coordinates {
 
     public double calculateDistance(Coordinates coordinates) {
         double RADIUS = 6371000;
-        double lat1 = latitude;
-        double lat2 = coordinates.getLatitude();
-        double lon1 = longitude;
-        double lon2 = coordinates.getLongitude();
-        double inner = Math.pow(Math.sin((lat2-lat1)/2),2)+Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin((lon2-lon1)/2),2);
+        double lat1 = Math.toRadians(latitude);
+        double lat2 = Math.toRadians(coordinates.getLatitude());
+        double lon1 = Math.toRadians(longitude);
+        double lon2 = Math.toRadians(coordinates.getLongitude());
+
+        double dlat = lat2 - lat1;
+        double dlon = lon2 - lon1;
+
+        double inner = haversine(dlat) + Math.cos(lat1) * Math.cos(lat2) * haversine(dlon);
         double haversineDistance = 2 * RADIUS * Math.asin(Math.sqrt(inner));
         return haversineDistance;
+    }
+
+    private double haversine(double value) {
+        return Math.pow(Math.sin(value / 2), 2);
     }
 
     @Override
